@@ -7,7 +7,7 @@ const server = express();
 server.use(express.urlencoded({ extended: true }));
 server.use(logger('dev'));
 
-// Serve static files from the "public" directory
+// Serve static files from the correct path
 const publicPath = path.join(__dirname, 'public');
 server.use(express.static(publicPath));
 
@@ -23,12 +23,11 @@ server.post('/ITC505/Lab-7/index.html', (req, res) => {
   console.log('Form data received:', req.body);
 
   if (!adjective || !noun || !verb || !place || !pluralNoun) {
-    res.send(`
+    return res.status(400).send(`
       <h1>Submission Failed</h1>
       <p>Please fill out all fields in the form.</p>
       <a href="/ITC505/Lab-7/index.html">Go Back to the Form</a>
     `);
-    return;
   }
 
   const madLib = `
@@ -43,8 +42,16 @@ server.post('/ITC505/Lab-7/index.html', (req, res) => {
   `);
 });
 
-// Start the server
-const port = 8080; // Adjust this if needed
-server.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+// Catch-all route to handle any unhandled routes
+server.use((req, res) => {
+  res.status(404).send('Not Found');
 });
+
+// Error handling middleware
+server.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+// Export the server for Vercel
+module.exports = server;
