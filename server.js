@@ -7,18 +7,17 @@ const server = express();
 server.use(express.urlencoded({ extended: true }));
 server.use(logger('dev'));
 
-// Route to generate a random number
-server.get('/do_a_random', (req, res) => {
-  const randomNumber = Math.floor(Math.random() * 100) + 1;
-  res.send(`Your random number is: ${randomNumber}`);
-});
-
-// Serve static files
+// Serve static files from the "public" directory
 const publicPath = path.join(__dirname, 'public');
 server.use(express.static(publicPath));
 
-// POST handler for the form submission
-server.post('/ITC505/lab-7/index.html', (req, res) => {
+// Redirect the root path to the form's URL
+server.get('/', (req, res) => {
+  res.redirect('/ITC505/Lab-7/index.html');
+});
+
+// POST handler for form submissions
+server.post('/ITC505/Lab-7/index.html', (req, res) => {
   const { adjective, noun, verb, place, pluralNoun } = req.body;
 
   console.log('Form data received:', req.body);
@@ -27,7 +26,7 @@ server.post('/ITC505/lab-7/index.html', (req, res) => {
     res.send(`
       <h1>Submission Failed</h1>
       <p>Please fill out all fields in the form.</p>
-      <a href="/ITC505/lab-7/index.html">Go Back to the Form</a>
+      <a href="/ITC505/Lab-7/index.html">Go Back to the Form</a>
     `);
     return;
   }
@@ -40,12 +39,12 @@ server.post('/ITC505/lab-7/index.html', (req, res) => {
   res.send(`
     <h1>Submission Successful</h1>
     <p>${madLib}</p>
-    <a href="/ITC505/lab-7/index.html">Go Back to the Form</a>
+    <a href="/ITC505/Lab-7/index.html">Go Back to the Form</a>
   `);
 });
 
 // Start the server
-const port = process.argv[2] === 'local' ? 8080 : 80;
+const port = 8080; // Adjust this if needed
 server.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
