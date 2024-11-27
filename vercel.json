@@ -1,13 +1,20 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "server.js",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      { "src": "/(.*)", "dest": "server.js" }
-    ]
-  }
-  
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/ITC505/Lab-7/(.*)",
+      "dest": "public/ITC505/Lab-7/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
+  ],
+  "public": true
+}
